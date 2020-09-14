@@ -1,0 +1,17 @@
+          layout: {
+            front: ['grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey'],
+            back: ['grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey'],
+            top: ['grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey'],
+            bottom: ['grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey'],
+            left: ['grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey'],
+            right: ['grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey']
+          },
+
+          layout: {
+            front: [red, red, red, red, red, red, red, red, red],
+            back: [orange, orange, orange, orange, orange, orange, orange, orange, orange],
+            top: [white, white, white, white, white, white, white, white, white],
+            bottom: [yellow, yellow, yellow, yellow, yellow, yellow, yellow, yellow, yellow],
+            left: [green, green, green, green, green, green, green, green, green],
+            right: [blue, blue, blue, blue, blue, blue, blue, blue, blue]
+          },
