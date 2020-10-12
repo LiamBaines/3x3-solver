@@ -1,0 +1,13 @@
+Nums        Colours
+0, 8 , 16   WRG
+1, 9 , 17   WGO
+2, 10, 18   WOB
+3, 11, 19   WBR
+4, 12, 20   YRG
+5, 13, 21   YGO
+6, 14, 22   YOB
+7, 15, 23   YBR
+
+0-7:    W on U
+8-15:   W on R
+16-23:  W on F
