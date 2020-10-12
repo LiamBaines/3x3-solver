@@ -7,6 +7,7 @@
   <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
   <script src='https://unpkg.com/babel-standalone@6/babel.min.js'></script>
   <script src='./cube.js'></script>
+
 </head>
 <body>
   <div id='app'></div>
@@ -24,8 +25,25 @@
             {Cube({s: p.s, f: p.f})}
             {Palette({s: p.s, f: p.f})}
           </div>
-          <p>{cube.cornerState(p.s.layout)}</p>
-          <p>{cube.edgeState(p.s.layout)}</p>
+          <button onClick={() => p.f.uniqueCorners(p.s.layout)}>Unique corners</button>
+          <button onClick={() => p.f.uniqueEdges(p.s.layout)}>Unique edges</button>
+          <button onClick={() => p.f.uniqueSolution(p.s.layout)}>Unique solution</button>
+          <button onClick={() => p.f.aStar(p.s.layout)}>A*</button>
+          <div>
+            <button onClick={() => p.f.turn(p.s.layout, 'R')}>R</button>
+            <button onClick={() => p.f.turn(p.s.layout, 'r')}>r</button>
+            <button onClick={() => p.f.turn(p.s.layout, 'L')}>L</button>
+            <button onClick={() => p.f.turn(p.s.layout, 'l')}>l</button>
+            <button onClick={() => p.f.turn(p.s.layout, 'U')}>U</button>
+            <button onClick={() => p.f.turn(p.s.layout, 'u')}>u</button>
+            <button onClick={() => p.f.turn(p.s.layout, 'D')}>D</button>
+            <button onClick={() => p.f.turn(p.s.layout, 'd')}>d</button>
+            <button onClick={() => p.f.turn(p.s.layout, 'F')}>F</button>
+            <button onClick={() => p.f.turn(p.s.layout, 'f')}>f</button>
+            <button onClick={() => p.f.turn(p.s.layout, 'B')}>B</button>
+            <button onClick={() => p.f.turn(p.s.layout, 'b')}>b</button>
+          </div>
+          <p>{}</p>
           <div className = 'footer'>See the 2x2 solver in action <a href='https://youtu.be/QTSZLOQi8YQ' target="_blank">here</a>!</div>
         </div>
       )
@@ -50,7 +68,7 @@
         </div>
       )
     }  
-    function Face(p) {
+    function FaceB(p) {
       return (
         <div className={p.className}>
           <table>
@@ -75,7 +93,40 @@
       </div>
       )
     }
+    function Face(p) {
+      return (
+        <div className={p.className}>
+          <table>
+            <tbody>
+              <tr>
+                {StickerB({colour: p.colours[0], f: p.f, face: p.className, num: 0})}
+                {StickerB({colour: p.colours[1], f: p.f, face: p.className, num: 1})}
+                {StickerB({colour: p.colours[2], f: p.f, face: p.className, num: 2})}
+              </tr>
+              <tr>
+                {StickerB({colour: p.colours[3], f: p.f, face: p.className, num: 3})}
+                {StickerB({colour: p.colours[4], f: p.f, face: p.className, num: 4})}
+                {StickerB({colour: p.colours[5], f: p.f, face: p.className, num: 5})}
+              </tr>
+              <tr>
+                {StickerB({colour: p.colours[6], f: p.f, face: p.className, num: 6})}
+                {StickerB({colour: p.colours[7], f: p.f, face: p.className, num: 7})}
+                {StickerB({colour: p.colours[8], f: p.f, face: p.className, num: 8})}
+              </tr>
+          </tbody>
+        </table>
+      </div>
+      )
+    }
     function Sticker(p) {
+      return (
+        //<td style={{backgroundColor: p.colour}} onClick={() => p.f.paint(p.face, p.num)}>
+          <td onClick={() => p.f.paint(p.face, p.num)}>
+            <p style={{color: p.colour, textAlign: 'center', fontFamily: 'sans-serif'}}><strong>X</strong></p>
+        </td>
+      )
+    }
+    function StickerB(p) {
       return (
         <td style={{backgroundColor: p.colour}} onClick={() => p.f.paint(p.face, p.num)}>
         </td>
@@ -87,7 +138,7 @@
             <img
               className = {p.className + ' arrow'}
               src='media/arrow.png'
-              onClick={() => p.f.turn(p.direction)}
+              onClick={() => p.f.turn(p.s.layout, p.direction)}
             />
         )
       }
@@ -127,15 +178,20 @@
         this.ChangeBrush = this.ChangeBrush.bind(this);
         this.Paint = this.Paint.bind(this);
         this.Turn = this.Turn.bind(this);
+        this.UniqueCorners = this.UniqueCorners.bind(this);
+        this.UniqueEdges = this.UniqueEdges.bind(this);
+        this.UniqueSolution = this.UniqueSolution.bind(this);
+        this.List = this.List.bind(this);
+        this.AStar = this.AStar.bind(this);
         this.state = {
           inputMode: true,
           layout: {
-            front: ['grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey'],
-            back: ['grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey'],
-            top: ['grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey'],
-            bottom: ['grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey'],
-            left: ['grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey'],
-            right: ['grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey']
+            front: [red, red, red, red, red, red, red, red, red],
+            back: [orange, orange, orange, orange, orange, orange, orange, orange, orange],
+            top: [white, white, white, white, white, white, white, white, white],
+            bottom: [yellow, yellow, yellow, yellow, yellow, yellow, yellow, yellow, yellow],
+            left: [green, green, green, green, green, green, green, green, green],
+            right: [blue, blue, blue, blue, blue, blue, blue, blue, blue]
           },
           brush: white,
         };
@@ -157,32 +213,35 @@
           }
         })
       }
-      Turn(turn) {
-        let l = this.state.layout
-        let stickerArray = l.front.concat(l.back, l.top, l.bottom, l.left, l.right);
+      Turn(l, turns, recording = true) { 
+        //console.log('Turning ' + cube.cornerState(l) + ' in direction ' + turns)
+        let n = turns.length;
+        //let l = JSON.parse(JSON.stringify(this.state.layout))
         let maps = {
           R: [0, 1, 35, 3, 4, 32, 6, 7, 29, 20, 10, 11, 23, 13, 14, 26, 16, 17, 18, 19, 8, 21, 22, 5, 24, 25, 2, 27, 28, 9, 30, 31, 12, 33, 34, 15, 36, 37, 38, 39, 40, 41, 42, 43, 44, 51, 48, 45, 52, 49, 46, 53, 50, 47],
           r: [0, 1, 26, 3, 4, 23, 6, 7, 20, 29, 10, 11, 32, 13, 14, 35, 16, 17, 18, 19, 9, 21, 22, 12, 24, 25, 15, 27, 28, 8, 30, 31, 5, 33, 34, 2, 36, 37, 38, 39, 40, 41, 42, 43, 44, 47, 50, 53, 46, 49, 52, 45, 48, 51],
-          L: [24, 1, 2, 21, 4, 5, 18, 7, 8, 9, 10, 27, 12, 13, 30, 15, 16, 33, 11, 19, 20, 14, 22, 23, 17, 25, 26, 6, 28, 29, 3, 31, 32, 0, 34, 35, 36, 39, 42, 37, 40, 43, 38, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53],
-          l: [33, 1, 2, 30, 4, 5, 27, 7, 8, 9, 10, 18, 12, 13, 21, 15, 16, 24, 6, 19, 20, 3, 22, 23, 6, 25, 26, 11, 18 ,19, 14, 31, 32, 17, 34, 35, 38, 41, 44, 37, 40, 43, 36, 39, 42, 45, 46, 47, 48, 49, 50, 51, 52, 53],
-          F: [0, 3, 6, 1, 4, 7, 2, 5, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 44, 41, 38, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 51, 48, 45, 36, 37, 33, 39, 40, 34, 42, 43, 35, 18, 46, 47, 19, 49, 50, 20, 52, 53],
-          f: [2, 5, 8, 1, 4, 7, 0, 3, 6, 9, 10, 11, 12, 13, 14, 15, 16, 17, 45, 48, 51, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 38, 41, 44, 36, 38, 20, 39, 40, 19, 42, 43, 18, 35, 46, 47, 34, 49, 50, 33, 52, 53],
+          L: [24, 1, 2, 21, 4, 5, 18, 7, 8, 9, 10, 27, 12, 13, 30, 15, 16, 33, 11, 19, 20, 14, 22, 23, 17, 25, 26, 6, 28, 29, 3, 31, 32, 0, 34, 35, 42, 39, 36, 43, 40, 37, 44, 41, 38, 45, 46, 47, 48, 49, 50, 51, 52, 53],
+          l: [33, 1, 2, 30, 4, 5, 27, 7, 8, 9, 10, 18, 12, 13, 21, 15, 16, 24, 6, 19, 20, 3, 22, 23, 0, 25, 26, 11, 28, 29, 14, 31, 32, 17, 34, 35, 38, 41, 44, 37, 40, 43, 36, 39, 42, 45, 46, 47, 48, 49, 50, 51, 52, 53],
+          F: [6, 3, 0, 7, 4, 1, 8, 5, 2, 9, 10, 11, 12, 13, 14, 15, 16, 17, 44, 41, 38, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 51, 48, 45, 36, 37, 33, 39, 40, 34, 42, 43, 35, 18, 46, 47, 19, 49, 50, 20, 52, 53],
+          f: [2, 5, 8, 1, 4, 7, 0, 3, 6, 9, 10, 11, 12, 13, 14, 15, 16, 17, 45, 48, 51, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 38, 41, 44, 36, 37, 20, 39, 40, 19, 42, 43, 18, 35, 46, 47, 34, 49, 50, 33, 52, 53],
           B: [0, 1, 2, 3, 4, 5, 6, 7, 8, 15, 12, 9, 16, 13, 10, 17, 14, 11, 18, 19, 20, 21, 22, 23, 47, 50, 53, 36, 39, 42, 30, 31, 32, 33, 34, 35, 26, 37, 38, 25, 40, 41, 24, 43, 44, 45, 46, 29, 48, 49, 28, 51, 52, 27],
           b: [0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 14, 17, 10, 13, 16, 9, 12, 15, 18, 19, 20, 21, 22, 23, 42, 39, 36, 53, 50, 47, 30, 31, 32, 33, 34, 35, 27, 37, 38, 28, 40, 41, 29, 43, 44, 45, 46, 24, 48, 49, 25, 51, 52, 26],
           U: [45, 46, 47, 3, 4, 5, 6, 7, 8, 36, 37, 38, 12, 13, 14, 15, 16, 17, 20, 23, 26, 19, 22, 25, 18, 21, 24, 27, 28, 29, 30, 31, 32, 33, 34, 35, 0, 1, 2, 39, 40, 41, 42, 43, 44, 9, 10, 11, 48, 49, 50, 51, 52, 53],
           u: [36, 37, 38, 3, 4, 5, 6, 7, 8, 45, 46, 47, 12, 13, 14, 15, 16, 17, 24, 21, 18, 25, 22, 19, 26, 23, 20, 27, 28, 29, 30, 31, 32, 33, 34, 35, 9, 10, 11, 39, 40, 41, 42, 43, 44, 0, 1, 2, 48, 49, 50, 51, 52, 53],
-          D: [0, 1, 2, 3, 4, 5, 42, 43, 44, 9, 10, 11, 12, 13, 14, 51, 52, 53, 18, 19, 20, 21, 22, 23, 24, 25, 26, 29, 32, 25, 28, 31, 34, 27, 30, 33, 36, 37, 38, 39, 40, 41, 15, 16, 17, 45, 46, 47, 48, 49, 50, 6, 7, 8],  
+          D: [0, 1, 2, 3, 4, 5, 42, 43, 44, 9, 10, 11, 12, 13, 14, 51, 52, 53, 18, 19, 20, 21, 22, 23, 24, 25, 26, 29, 32, 35, 28, 31, 34, 27, 30, 33, 36, 37, 38, 39, 40, 41, 15, 16, 17, 45, 46, 47, 48, 49, 50, 6, 7, 8],  
           d: [0, 1, 2, 3, 4, 5, 51, 52, 53, 9, 10, 11, 12, 13, 14, 42, 43, 44, 18, 19, 20, 21, 22, 23, 24, 25, 26, 33, 30, 27, 34, 31, 28, 35, 32, 29, 36, 37, 38, 39, 40, 41, 6, 7, 8, 45, 46, 47, 48, 49, 50, 15, 16, 17],
-          X: [33, 34, 35, 30, 31, 32, 27, 28, 29, 20, 19, 18, 23, 22, 21, 26, 25, 24, 6, 7, 8, 3, 4, 5, 0, 1, 2, 11, 10, 9, 14, 13, 12, 17, 16, 15, 38, 41, 44, 37, 40, 42, 36, 39, 42, 51, 48, 45, 52, 49, 46, 53, 50, 47],
+          X: [33, 34, 35, 30, 31, 32, 27, 28, 29, 20, 19, 18, 23, 22, 21, 26, 25, 24, 6, 7, 8, 3, 4, 5, 0, 1, 2, 11, 10, 9, 14, 13, 12, 17, 16, 15, 38, 41, 44, 37, 40, 43, 36, 39, 42, 51, 48, 45, 52, 49, 46, 53, 50, 47],
           x: [24, 25, 26, 21, 22, 23, 18, 19, 20, 29, 28, 27, 32, 31, 30, 35, 34, 33, 11, 10, 9, 14, 13, 12, 17, 16, 15, 6, 7, 8, 3, 4, 5, 0, 1, 2, 42, 39, 36, 43, 40, 37, 44, 41, 38, 47, 50, 53, 46, 49, 52, 45, 48, 51],
-          Y: [45, 46, 47, 48, 49, 50, 51, 52, 53, 36, 37, 38, 39, 40, 41, 42, 43, 44, 20, 23, 26, 19, 22, 25, 18, 21, 24, 33, 30, 27, 34, 41, 28, 35, 32, 29, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+          Y: [45, 46, 47, 48, 49, 50, 51, 52, 53, 36, 37, 38, 39, 40, 41, 42, 43, 44, 20, 23, 26, 19, 22, 25, 18, 21, 24, 33, 30, 27, 34, 31, 28, 35, 32, 29, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
           y: [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 24, 21, 18, 25, 22, 19, 26, 23, 20, 29, 32, 35, 28, 31, 34, 27, 30, 33, 9, 10, 11, 12, 13, 14, 15, 16, 17, 0, 1, 2, 3, 4, 5, 6, 7, 8],
           Z: [6, 3, 0, 7, 4, 1, 8, 5, 2, 11, 14, 17, 10, 13, 16, 9, 12, 15, 44, 41, 38, 43, 40, 37, 42, 39, 36, 53, 50, 47, 52, 49, 46, 51, 48, 45, 27, 30, 33, 28, 31, 34, 29, 32, 35, 18, 21, 24, 19, 22, 25, 20, 23, 26],
           z: [2, 5, 8, 1, 4, 7, 0, 3, 6, 15, 12, 9, 16, 13, 10, 17, 14, 11, 45, 48, 51, 46, 49, 52, 47, 50, 53, 36, 39, 42, 37, 40, 43, 38, 41, 44, 26, 23, 20, 25, 22, 19, 24, 21, 18, 35, 32, 29, 34, 31, 28, 33, 30, 27]
         }
-        let mapArray = maps[turn];
-        let r = mapArray.map(x => stickerArray[x]);
-        l = {
+        for (let i = 0; i < n; i ++) {
+          let stickerArray = l.front.concat(l.back, l.top, l.bottom, l.left, l.right);
+          let mapArray = maps[turns[i]];
+          let r = mapArray.map(element => stickerArray[element]);
+          l = {
             front: [r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8]],
             back: [r[9], r[10], r[11], r[12], r[13], r[14], r[15], r[16], r[17]],
             top: [r[18], r[19], r[20], r[21], r[22], r[23], r[24], r[25], r[26]],
@@ -190,11 +249,259 @@
             left: [r[36], r[37], r[38], r[39], r[40], r[41], r[42], r[43], r[44]],
             right: [r[45], r[46], r[47], r[48], r[49], r[50], r[51], r[52], r[53]],
           }
-        this.setState((currentState) => {
-          return {
-            layout: l
+        }
+        if (recording == true) {
+          this.setState((currentState) => {
+            return {
+              layout: l
+            }
+          })
+        } else {
+          //console.log('Result: ' + cube.cornerState(l))
+          return l;
+        }
+      }
+      UniqueCorners(l) {
+        let p = -1;
+        let o = -1; // does this need to change because of the clockwise thing??
+        let adjustArray = [ //X = R, Y = U, Z = F
+          ['', 'y', 'YY', 'Y' ,'zzY', 'xx', 'xxY', 'ZZ'],
+          ['Xy', 'YYz', 'xY', 'z', 'Z', 'xy', 'zYY', 'XY'],
+          ['ZY', 'x', 'zy', 'XYY', 'X', 'Zy', 'xYY', 'zY'],
+        ]
+        for (let i = 0; i < 3; i++) {
+          for (let j = 0; j < 8; j++) {
+            if (cube.cornerState(l)[j] == cube.corners[i][0]) {
+              p = i; // permutation (whether block 0 is an A, I or Q)
+              o = j; // orientation (which position in the string A/I/Q is in)
+            }
           }
-        })
+        }
+        let adjustment = adjustArray[p][o];
+        let val = cube.cornerState(this.Turn(l, adjustment, false)); //this should start with an A, but doesn't
+        if (val[0] != 'A') {
+          console.log(val);
+          console.log(adjustArray[p][o])
+        }
+        val = val.slice(1)
+        // this.setState((currentState) => {
+        //   return {
+        //     layout: l
+        //   }
+        // })
+        return val;
+      }
+      //X = R, Y = U, Z = F
+      UniqueEdges(l) {
+        let p = -1;
+        let o = -1;
+        let adjustArray = [
+          ['', 'y', 'yy', 'Y', 'Z', 'Zyy', 'zyy', 'z', 'zz', 'yzz', 'xx', 'Yzz'],
+          ['ZZX', 'xZ', 'x', 'xz', 'yz', 'xy', 'xY', 'YZ', 'zYZ', 'Zy', 'xyy', 'zY'],
+        ]
+        for (let i = 0; i < 3; i++) {
+          for (let j = 0; j < 12; j++) {
+            if (cube.edgeState(l)[j] == cube.edges[i][0]) {
+              p = i;
+              o = j;
+            }
+          }
+        }
+        let adjustment = adjustArray[p][o];
+        let n = adjustment.length;
+        let val = cube.edgeState(this.Turn(l, adjustment, false));
+        // this.setState((currentState) => {
+        //   return {
+        //     layout: l
+        //   }
+        // })
+        return val;
+      }
+      UniqueSolution(l) {
+        //adjustArray based on where the white and red squares are
+        let solvedLayout = {
+            front: [red, red, red, red, red, red, red, red, red],
+            back: [orange, orange, orange, orange, orange, orange, orange, orange, orange],
+            top: [white, white, white, white, white, white, white, white, white],
+            bottom: [yellow, yellow, yellow, yellow, yellow, yellow, yellow, yellow, yellow],
+            left: [green, green, green, green, green, green, green, green, green],
+            right: [blue, blue, blue, blue, blue, blue, blue, blue, blue]
+        };
+        let w = -1;
+        let r = -1;
+        // white going across, red going vertically
+        // front, back, top, bottom, left, right
+        //X = R, Y = U, Z = F
+        // const adjustArray = [
+        //   ['', '', '', 'zz', 'Z', 'z'],
+        //   ['', '', 'yy', 'xx', 'Zyy', ],
+        //   ['Xyy', 'x', '', '', 'ZY', 'zy'],
+        //   ['X', 'YYX', '', '', 'Zy', 'zY'],
+        //   ['Xy', 'xy', 'y', 'xxy', '', ''],
+        //   ['XY', 'xY', 'Y', 'xxY', '', '']
+        // ];
+        const adjustArray = [
+          ['', '', '', 'ZZ', 'z', 'Z'],
+          ['', '', 'YY', 'XX', 'YYz', ],
+          ['YYx', 'X', '', '', 'yz', 'YZ'],
+          ['x', 'xyy', '', '', 'Yz', 'yZ'],
+          ['Yx', 'YX', 'Y', 'YXX', '', ''],
+          ['yx', 'yX', 'y', 'yXX', '', '']
+        ];
+        ['front', 'back', 'top', 'bottom', 'left', 'right'].forEach((face, index) => {
+          if (l[face][4] == white) {
+            w = index;
+          };
+          if (l[face][4] == red) {
+            r = index
+          };
+        });
+        let adjustment = adjustArray[r][w]
+        let newLayout = this.Turn(solvedLayout, adjustment, false);
+        let solution = cube.fullState(newLayout);
+        //console.log(solution)
+        return solution;
+      }
+      List() {
+        let seen = new Set()
+        seen.add('BCDEFGH')
+        let L = JSON.parse(JSON.stringify(this.state.layout))
+        let cornerSolutions = [['BCDEFGH', '']]
+        let edgeSolutions = ['abcdefghijkl']
+        let turnsArray = ['D', 'd', 'L', 'l', 'B', 'b']
+        let route = ''
+        let rev = ''
+        let count = 0;
+        for (let g = 0; g < 3674160; g++) {
+          console.log(g)
+          for (let f = 0; f < 6; f ++) {
+            count++
+            L = cube.layout('A'.concat(cornerSolutions[g][0]), 'abcdefghijkl', '012345')
+            route = cornerSolutions[g][1]
+            let tempL = this.Turn(L, turnsArray[f], false)
+            if (turnsArray[f].toUpperCase() == turnsArray[f]) {rev = turnsArray[h].toLowerCase() } else {rev = turnsArray[h].toUpperCase()};
+            route = rev.concat(route)
+            if (!seen.has(this.UniqueCorners(tempL))) {
+              seen.add(this.UniqueCorners(tempL))
+              cornerSolutions.push([this.UniqueCorners(tempL), route]);
+            }
+            //edgeSolutions.push(this.UniqueEdges(tempL));
+          }
+        }
+        console.log(cornerSolutions)
+        console.log(seen)
+        console.log(count)
+      }
+      AStar() {
+        console.log('Solving...')
+        class Node {
+          constructor(name, distance, previousNode, routeTaken, heuristic, layout) {
+            this.name = name;
+            this.distance = distance;
+            this.previousNode = previousNode;
+            this.routeTaken = routeTaken
+            this.heuristic = heuristic
+            this.layout = layout
+            if (name.length != 26) {console.log('Faulty Node created: ' + name)}
+          }
+        };
+        // function h(layout) {
+        //   let lookUp = this.UniqueCorners(cube.cornerState(layout));
+        //   let val = -1;
+        //   console.log('Looking up ', lookUp)
+        //   for (let i = 0; i < 3674160; i++) {
+        //     if (cornerSolutions[i][0] == lookUp) {
+        //       val = cornerSolutions[i][1].length
+        //     }
+        //   }
+        //   return val;
+        // }
+
+        let l = this.state.layout;
+        let solved = false;
+        let solution = this.UniqueSolution(l);
+        console.log('Finding path from ', cube.fullState(l), ' to ', solution)
+        let queue = [];
+        queue.push(new Node(cube.fullState(l), 0, 'N/A', '', 1000000, l));
+        const turnsArray = ['U', 'u', 'D', 'd', 'R', 'r', 'L', 'l', 'F', 'f', 'B', 'b', 'u', 'U', 'd', 'D', 'r', 'R', 'l', 'L', 'f', 'F', 'b', 'B']
+        let count = 0;
+            for (let i = 0; i < 26; i++) {
+              if (cube.fullState(l)[i] == solution[i]) {
+                count++
+              }
+            }
+        let hc = count;
+        console.log('Heuristic: ', hc)
+        //function extend(node) {
+        while (!solved) {
+          let origin = queue[0];
+          let newFirstItem = false;
+          for (let x = 0; x < 12; x++) {
+            l = origin.layout;
+            l = this.Turn(l, turnsArray[x], false);
+            if (cube.fullState(l) == solution) {
+              solved = true;
+              console.log('Solved!')
+              console.log(origin.routeTaken.concat(turnsArray[x]))
+              let n = queue.length;
+              // for (let i = 0; i < n; i++) {
+              //   console.log(queue[i].heuristic)
+              // }
+            } 
+
+
+            // let lookUp = this.UniqueCorners(l); // l is fine
+            // let val = -1;
+            // for (let i = 0; i < 3674160; i++) {
+            //   if (cornerSolutions[i][0] == lookUp) {
+            //     val = cornerSolutions[i][1].length
+            //   }
+            // }
+            count = 0;
+            for (let i = 0; i < 26; i++) {
+              if (cube.fullState(l)[i] == solution[i]) {
+                count++
+              }
+            }
+            hc = count;
+            // if (hc == -1) {
+            //   console.log('No heuristic found for ', lookUp, '. Turn: ', turnsArray[x]);
+            //   //console.log('lookUp derived from running UniqueCorners on ', cube.cornerState(l));
+            //   this.setState((currentState) => {
+            //     return {
+            //       layout: l
+            //     }
+            //   })
+            // }
+            
+
+            let n = queue.length.valueOf();
+            for (let y = 0; y < n; y++) {
+              if (hc > queue[y].heuristic) {
+                queue.splice(y, 0, new Node(cube.fullState(l), origin.distance + 1, origin.name, origin.routeTaken.concat(turnsArray[x]), hc, l))
+              } else if (y == n - 1) {
+                queue.push(new Node(cube.fullState(l), origin.distance + 1, origin.name, origin.routeTaken.concat(turnsArray[x]), hc, l))
+
+              }
+            }
+          }
+        //}
+        if (!newFirstItem) {
+            queue.shift();
+          }
+          console.log(queue.length)
+        if (queue.length > 2000000) {
+          console.log('Aborting.');
+          console.log('queue.length: ' + queue.length);
+          console.log('heuristic: ' + queue[0].heuristic)
+          solved = true;
+          this.setState((currentState) => {
+            return {
+              layout: l
+            }
+          })
+        }
+        }
       }
       render() {
         return (
@@ -203,7 +510,12 @@
               f = {{
                 changeBrush: this.ChangeBrush,
                 paint: this.Paint,
-                turn: this.Turn
+                turn: this.Turn,
+                uniqueCorners: this.UniqueCorners,
+                uniqueEdges: this.UniqueEdges,
+                uniqueSolution: this.UniqueSolution,
+                list: this.List,
+                aStar: this.AStar
               }}/>
       )
       }

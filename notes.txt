@@ -15,3 +15,41 @@
             left: [green, green, green, green, green, green, green, green, green],
             right: [blue, blue, blue, blue, blue, blue, blue, blue, blue]
           },
+
+                    <button onClick={() => p.f.turn(p.s.layout, 'R')}>R</button>
+          <button onClick={() => p.f.turn(p.s.layout, 'r')}>r</button>
+          <button onClick={() => p.f.turn(p.s.layout, 'L')}>L</button>
+          <button onClick={() => p.f.turn(p.s.layout, 'l')}>l</button>
+          <button onClick={() => p.f.turn(p.s.layout, 'U')}>U</button>
+          <button onClick={() => p.f.turn(p.s.layout, 'u')}>u</button>
+          <button onClick={() => p.f.turn(p.s.layout, 'D')}>D</button>
+          <button onClick={() => p.f.turn(p.s.layout, 'd')}>d</button>
+          <button onClick={() => p.f.turn(p.s.layout, 'F')}>F</button>
+          <button onClick={() => p.f.turn(p.s.layout, 'f')}>f</button>
+          <button onClick={() => p.f.turn(p.s.layout, 'B')}>B</button>
+          <button onClick={() => p.f.turn(p.s.layout, 'b')}>b</button>
+
+
+
+          let writer = fs.createWriteStream('data.csv', {
+  flags: 'w'
+});
+
+writer.on('ready', function() {
+  console.log('File ready to write.')
+})
+
+writer.on('pipe', function() {
+  console.log('Pipe incoming.')
+})
+
+reader.pipe(writer)
+
+async function add(solutions) {
+  return new Promise(resolve => {
+    fs.appendFile('data.csv', solutions, function (err) {
+        console.log('Appended.')
+        resolve('Appended.');
+      });
+  });
+}
