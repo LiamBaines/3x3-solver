@@ -33,9 +33,9 @@ const cube = { // corners only
   },
   turn([p1, o1], dir) {
     let p = this.maps.p[dir];
-    let o = this.maps.o[dir];
+    let o = this.maps.o[dir]; 
     let p2 = p.map(x => p1[x])
-    let o2 = p2.map((x, j) => (p1[j] == p2[j]) ? o1[j] : o[o1[x]]);
+    let o2 = p.map(x => o1[x]).map((x, j) => (p1[j] == p2[j]) ? x : o[x])
     return [p2, o2]
   }
 }

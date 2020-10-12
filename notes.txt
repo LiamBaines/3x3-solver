@@ -53,3 +53,10 @@ async function add(solutions) {
       });
   });
 }
+
+
+
+TO DO:
+
+- cut down branching factor to 9.5
+- check out lehmer decoding so that the queue doesn't take up so much memory
