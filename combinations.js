@@ -27,5 +27,4 @@ function combine(n, sequence, last = 'X') {
   }
 }
 
-combine(9, '')
 console.log(str, count)

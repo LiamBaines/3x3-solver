@@ -32,14 +32,7 @@ function check(n) {
 let pdb = new Array(88179840)
 pdb[0] = 'X';
 
-console.log(hash.getState(145))
-console.log(hash.getZ([
-  [
-    0, 1, 2, 3,
-    4, 5, 6, 7
-  ],
-  [
-    0, 0, 1, 2,
-    1, 0, 1, 1
-  ]
-]))
+let state = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 0, 0, 0, 0, 0, 0, 0]];
+let trn = 'U'
+let newState = cube.turn(state, trn)
+console.log(`${state} => ${trn} => ${newState}`)

@@ -42,3 +42,4 @@ const cube = { // corners only
 }
 
 module.exports = cube;
+

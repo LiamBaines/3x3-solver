@@ -55,17 +55,13 @@ function execute(lim) {
   }
 }
 
-function combine(n, sequence = '', last = 'X') {
-  cube.state = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 0, 0, 0, 0, 0, 0, 0]]
-  for (h = 0; h < sequence.length; h++) {
-    cube.state = cube.turn(cube.state, sequence[h])
-  }
-  let z = hash.getZ(cube.state)
-  let d = sequence.length;
+function combine(n, state = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 0, 0, 0, 0, 0, 0, 0]], last = 'X', d = 0) {
+  let z = hash.getZ(state)
   if (pdb[z] === undefined || pdb[z] > d) pdb[z] = d;
-  if (sequence.length < n) {
+  if (d < n) {
     t[last].forEach(trn => {
-      combine(n, sequence.concat(trn), trn)
+      let newState = cube.turn(state, trn)
+      combine(n, newState, trn, d + 1)
     })
   }
 }
@@ -95,4 +91,4 @@ function executeCombine(n) {
   console.log(`Extended to depth ${n} in ${Date.now() - startTime}ms`)
 }
 
-executeCombine(8)
+executeCombine(7)

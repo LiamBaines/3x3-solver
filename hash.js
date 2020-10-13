@@ -22,8 +22,8 @@ const hash = {
     return this.factorials[n] / this.factorials[n - k]
   },
   getZ([p, o]) { 
-    let x = this.encode(p);
-    let y = this.dec2tern(o)
+    let x = this.encode(p.slice());
+    let y = this.dec2tern(o.slice())
     return 40320 * x + y
   },
   getState(z) {
