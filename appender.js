@@ -21,7 +21,7 @@ let pdb = new Array(88179840)
 pdb[0] = 'X';
 
 // add first item to pattern database
-let queue = [[0, 0, 0, 'all']] // = [[permutations, orientations, d]]
+let queue = [[0, 0, 'all']] // = [[z, d, last]]
 let turns = 0;
 let inserts = 0;
 let D = 0;
@@ -30,18 +30,16 @@ let D = 0;
 function execute(lim) {
   let startTime = Date.now()
   while (D < lim) {
-    let origState = [hash.decode(queue[0][0]), hash.tern2dec(queue[0][1])];
-    D = queue[0][2]
-    let last = queue[0][3]
+    let origState = hash.getState(queue[0][0]);
+    D = queue[0][1]
+    let last = queue[0][2]
     if (D < lim) {
       t[last].forEach(trn => {
         let newState = cube.turn(origState, trn)
-        let x = hash.encode(newState[0]);
-        let y =  hash.dec2tern(newState[1]);
-        let z = 40320*x + y
+        let z = hash.getZ(newState)
         if (pdb[z] === undefined) {
           pdb[z] = D + 1
-          queue.push([x, y, D + 1, trn])
+          queue.push([z, D + 1, trn])
           inserts++ 
         }
         turns++
