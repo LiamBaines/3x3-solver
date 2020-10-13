@@ -58,7 +58,7 @@ function execute(lim) {
   let endTime = Date.now()
   let timeTaken = endTime - startTime;
   console.log(`Executed to depth ${lim} in ${timeTaken} ms (${Math.floor(turns/timeTaken)} turns/ms). ${turns} turns, ${inserts} inserts (${Math.floor(100*(turns - inserts)/turns)}% redundancy)`)
-  for (h = 0; h < 10; h++) {
+  for (h = 0; h < 100; h++) {
     check(lim)
   }
 }
