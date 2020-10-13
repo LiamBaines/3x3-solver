@@ -17,26 +17,27 @@ const cube = { // corners only
       b: [0, 5, 1, 3, 4, 6, 2, 7]
     },
     o: {
-      U: [0, 2, 1],
-      u: [0, 2, 1],
-      D: [0, 2, 1],
-      d: [0, 2, 1],
-      R: [2, 1, 0],
-      r: [2, 1, 0],
-      L: [2, 1, 0],
-      l: [2, 1, 0],
-      F: [1, 0, 2],
-      f: [1, 0, 2],
-      B: [1, 0, 2],
-      b: [1, 0, 2]
+      U: [0, 0, 0, 0, 0, 0, 0, 0],
+      u: [0, 0, 0, 0, 0, 0, 0, 0],
+      D: [0, 0, 0, 0, 0, 0, 0, 0],
+      d: [0, 0, 0, 0, 0, 0, 0, 0],
+      R: [0, 0, 2, 1, 0, 0, 1, 2],
+      r: [0, 0, 2, 1, 0, 0, 1, 2],
+      L: [2, 1, 0, 0, 1, 2, 0, 0],
+      l: [2, 1, 0, 0, 1, 2, 0, 0],
+      F: [1, 0, 0, 2, 2, 0, 0, 1],
+      f: [1, 0, 0, 2, 2, 0, 0, 1],
+      B: [0, 2, 1, 0, 0, 1, 2, 0],
+      b: [0, 2, 1, 0, 0, 1, 2, 0]
     }    
   },
   turn([p1, o1], dir) {
     let p = this.maps.p[dir];
     let o = this.maps.o[dir]; 
-    let p2 = p.map(x => p1[x])
-    let o2 = p.map(x => o1[x]).map((x, j) => (p1[j] == p2[j]) ? x : o[x])
-    return [p2, o2]
+    let p2 = p.map(x => p1[x]);                 // re-order block permutations
+    let o2 = o1.map((x, j) => (x + o[j]) % 3);  // adjust block orientations
+    let o3 = p.map(x => o2[x]);                 // re-order block orientations
+    return [p2, o3]
   }
 }
 

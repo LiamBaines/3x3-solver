@@ -1,13 +1,11 @@
-Nums        Colours
-0, 8 , 16   WRG
-1, 9 , 17   WGO
-2, 10, 18   WOB
-3, 11, 19   WBR
-4, 12, 20   YRG
-5, 13, 21   YGO
-6, 14, 22   YOB
-7, 15, 23   YBR
+cw:   0   1    2
 
-0-7:    W on U
-8-15:   W on R
-16-23:  W on F
+WRG:  0   8    16
+WGO:  1   9    17
+WOB:  2   10   18
+WBR:  3   11   19
+
+YRG:  4   12   20
+YGO:  5   13   21
+YOB:  6   14   22
+YBR:  7   15   23

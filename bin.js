@@ -9,9 +9,27 @@ const t = ['U', 'u', 'D', 'd', 'L', 'l', 'R', 'r', 'F', 'f', 'B', 'b'];
 // console.log(cube.state)
 // console.log(hash.lehmer(cube.state[0]), hash.ternary(cube.state[1]))
 
-cube.state = cube.turn(cube.state, 'U')
-console.log(`[${cube.state[0].join(', ')}],   [${cube.state[1].join(', ')}]`)
-cube.state = cube.turn(cube.state, 'R')
-console.log(`[${cube.state[0].join(', ')}],   [${cube.state[1].join(', ')}]`)
-cube.state = cube.turn(cube.state, 'r')
-console.log(`[${cube.state[0].join(', ')}],   [${cube.state[1].join(', ')}]`)
+function sequence(str) {
+  cube.state = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 0, 0, 0, 0, 0, 0, 0]]
+  let arr = str.split('')
+  arr.forEach(trn => {
+    cube.state = cube.turn(cube.state, trn)
+  })
+  return cube.state;
+}
+
+function check(n) {
+  for (let i = 0; i < n + 1; i++) {
+    let state = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 0, 0, 0, 0, 0, 0, 0]]
+    for (j = 0; j < i; j++) {
+      let ran = Math.floor(Math.random() * t.all[ran])
+      state = cube.turn(state, t.all[ran])
+    }
+    console.log(hash.encode(state[0]), hash.dec2tern(state[1]))
+  }
+}
+
+console.log('\u001b[' + 93 + 'm' + 'hello stack' + '\u001b[0m')
+for (i = 0; i < 1000; i++) {
+  let foo = i*Math.random()
+}
