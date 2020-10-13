@@ -1,7 +1,7 @@
 const cube = require('./cornercube.js')
 const hash = require('./hash.js')
 const t = {
-  all: ['U', 'u', 'D', 'd', 'L', 'l', 'R', 'r', 'F', 'f', 'B', 'b'],
+  X: ['U', 'u', 'D', 'd', 'L', 'l', 'R', 'r', 'F', 'f', 'B', 'b'],
   U: ['U', 'D', 'd', 'L', 'l', 'R', 'r', 'F', 'f', 'B', 'b'],
   u: ['D', 'd', 'L', 'l', 'R', 'r', 'F', 'f', 'B', 'b'],
   D: ['D', 'L', 'l', 'R', 'r', 'F', 'f', 'B', 'b'],
@@ -21,14 +21,14 @@ let pdb = new Array(88179840)
 pdb[0] = 'X';
 
 // add first item to pattern database
-let queue = [[0, 0, 'all']] // = [[z, d, last]]
+let queue = [[0, 0, 'X']] // = [[z, d, last]]
 let turns = 0;
 let inserts = 0;
 let D = 0;
 
 //extend tree up to a given limit
 function execute(lim) {
-  let startTime = Date.now()
+  //let startTime = Date.now()
   while (D < lim) {
     let origState = hash.getState(queue[0][0]);
     D = queue[0][1]
@@ -55,13 +55,28 @@ function execute(lim) {
   }
 }
 
+function combine(n, sequence = '', last = 'X') {
+  cube.state = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 0, 0, 0, 0, 0, 0, 0]]
+  for (h = 0; h < sequence.length; h++) {
+    cube.state = cube.turn(cube.state, sequence[h])
+  }
+  let z = hash.getZ(cube.state)
+  let d = sequence.length;
+  if (pdb[z] === undefined || pdb[z] > d) pdb[z] = d;
+  if (sequence.length < n) {
+    t[last].forEach(trn => {
+      combine(n, sequence.concat(trn), trn)
+    })
+  }
+}
+
 function check(n) {
   let state = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 0, 0, 0, 0, 0, 0, 0]]
   let str = ''
   for (j = 0; j < n; j++) {
     let ran = Math.floor(Math.random() * 12)
-    state = cube.turn(state, t.all[ran])
-    str = str.concat(t.all[ran])
+    state = cube.turn(state, t.X[ran])
+    str = str.concat(t.X[ran])
   }
   x = hash.encode(state[0])
   y =  hash.dec2tern(state[1])
@@ -71,4 +86,13 @@ function check(n) {
   console.log('\u001b[' + colourCode + 'm' + `${str} => ${num}` + '\u001b[0m')
 }
 
-execute(7)
+function executeCombine(n) {
+  let startTime = Date.now()
+  combine(n)
+  for (h = 1; h < n + 1; h++) {
+    check(h)
+  }
+  console.log(`Extended to depth ${n} in ${Date.now() - startTime}ms`)
+}
+
+executeCombine(8)
