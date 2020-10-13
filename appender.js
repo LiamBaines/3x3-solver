@@ -17,15 +17,8 @@ const t = {
 }
 
 // initialise pattern database
-let pdb = [];
-for (i = 0; i < 40320; i++) {
-  let subArray = [];
-  for (j = 0; j < 2187; j++) {
-    subArray.push('')
-  }
-  pdb.push(subArray);
-}
-pdb[0][0] = 'X';
+let pdb = new Array(88179840)
+pdb[0] = 'X';
 
 // add first item to pattern database
 let queue = [[0, 0, 0, 'all']] // = [[permutations, orientations, d]]
@@ -45,8 +38,9 @@ function execute(lim) {
         let newState = cube.turn(origState, trn)
         let x = hash.encode(newState[0]);
         let y =  hash.dec2tern(newState[1]);
-        if (pdb[x][y] == '') {
-          pdb[x][y] = D + 1
+        let z = 40320*x + y
+        if (pdb[z] === undefined) {
+          pdb[z] = D + 1
           queue.push([x, y, D + 1, trn])
           inserts++ 
         }
@@ -58,7 +52,7 @@ function execute(lim) {
   let endTime = Date.now()
   let timeTaken = endTime - startTime;
   console.log(`Executed to depth ${lim} in ${timeTaken} ms (${Math.floor(turns/timeTaken)} turns/ms). ${turns} turns, ${inserts} inserts (${Math.floor(100*(turns - inserts)/turns)}% redundancy)`)
-  for (h = 0; h < 100; h++) {
+  for (h = 0; h < 10; h++) {
     check(lim)
   }
 }
@@ -73,9 +67,10 @@ function check(n) {
   }
   x = hash.encode(state[0])
   y =  hash.dec2tern(state[1])
-  let num = pdb[x][y];
+  let z = 40320*x + y
+  let num = pdb[z];
   let colourCode = (num == n) ? 32 : 93;
   console.log('\u001b[' + colourCode + 'm' + `${str} => ${num}` + '\u001b[0m')
 }
 
-execute(6)
+execute(7)

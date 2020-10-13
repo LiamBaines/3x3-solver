@@ -29,7 +29,7 @@ function check(n) {
   }
 }
 
-console.log('\u001b[' + 93 + 'm' + 'hello stack' + '\u001b[0m')
-for (i = 0; i < 1000; i++) {
-  let foo = i*Math.random()
-}
+let pdb = new Array(88179840)
+pdb[0] = 'X';
+
+console.log(pdb[1000])
