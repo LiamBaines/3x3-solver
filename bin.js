@@ -1,6 +1,7 @@
 const cube = require('./cornercube.js')
 const hash = require('./hash.js')
 const t = ['U', 'u', 'D', 'd', 'L', 'l', 'R', 'r', 'F', 'f', 'B', 'b'];
+const fs = require('fs')
 
 // cube.state = cube.turn(cube.state, 'R');
 // cube.state = cube.turn(cube.state, 'u');
@@ -29,10 +30,23 @@ function check(n) {
   }
 }
 
-let pdb = new Array(88179840)
-pdb[0] = 'X';
+async function write(i, data) {
+  fs.writeFile(`queue${i}.js1`, data, (err) => {
+    if (err) throw err;
+    console.log(`${data} has been saved to queue${i}.js`);
+  });
+}
 
-let state = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 0, 0, 0, 0, 0, 0, 0]];
-let trn = 'U'
-let newState = cube.turn(state, trn)
-console.log(`${state} => ${trn} => ${newState}`)
+let i = 0;
+async function wait() {
+  await write(i, i);
+  i++
+  if (i < 3) wait()
+}
+
+const arr = [1, 2, 3, 4, 5, 6, 9, 7, 8, 9, 10];
+const used = process.memoryUsage();
+for (let key in used) {
+  console.log(`${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB`);
+}
+
