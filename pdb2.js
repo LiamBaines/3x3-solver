@@ -12,7 +12,6 @@ const pdb = {
     return buf[0];
   },
   write(fd, pos, val) {
-    console.log(`Writing ${val} to ${pos}`)
     let buf = Buffer.from([val]);
     fs.writeSync(fd, buf, 0, 1, pos)
   }
