@@ -9,3 +9,18 @@ YRG:  4   12   20
 YGO:  5   13   21
 YOB:  6   14   22
 YBR:  7   15   23
+
+cw:
+
+WR:   0
+WG:   1
+WO:   2
+WB:   3
+RG:   4
+OG:   5
+OB:   6
+RB:   7
+YR:   8
+YG:   9
+YO:   10
+YB:   11

@@ -24,11 +24,11 @@ const hash = {
   getZ([p, o]) { 
     let x = this.encode(p.slice());
     let y = this.dec2tern(o.slice())
-    return 40320 * x + y
+    return 2187 * x + y
   },
   getState(z) {
-    let x = Math.floor(z / 40320);
-    let y = z % 40320;
+    let x = Math.floor(z / 2187);
+    let y = z % 2187;
     return [this.decode(x), this.tern2dec(y)]
   },  
   encode(arr) {

@@ -1,5 +1,7 @@
-const cube = require('./cornercube.js')
-const hash = require('./hash.js')
+const cube = require('./edgecube.js')
+const hash = require('./hash2.js')
+const pdb = require('./pdb')
+const queue = require('./queue.js')
 const t = ['U', 'u', 'D', 'd', 'L', 'l', 'R', 'r', 'F', 'f', 'B', 'b'];
 const fs = require('fs')
 
@@ -30,23 +32,41 @@ function check(n) {
   }
 }
 
-async function write(i, data) {
-  fs.writeFile(`queue${i}.js1`, data, (err) => {
-    if (err) throw err;
-    console.log(`${data} has been saved to queue${i}.js`);
-  });
+function write() {
+  let arr = [];
+  for (i = 0; i < 1000; i++) {
+    arr.push(i)
+  }
+  let buf = Buffer.from(arr)
+  fs.writeFileSync(`./bin2.js`, buf)
 }
 
-let i = 0;
-async function wait() {
-  await write(i, i);
-  i++
-  if (i < 3) wait()
+function read() {
+  const fd = fs.openSync('./bin2.js', 'r')
+  let buf = Buffer.alloc(1)
+  fs.readSync(fd, buf, 0, 1, 108)
+  console.log(parseInt(buf[0]))
 }
 
-const arr = [1, 2, 3, 4, 5, 6, 9, 7, 8, 9, 10];
-const used = process.memoryUsage();
-for (let key in used) {
-  console.log(`${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB`);
+function toBytes(num) {
+  let arr = [];
+  for (i = 0; i < 3; i ++) {
+    let x = Math.floor(num / Math.pow(1024, i));
+    arr.unshift(x)
+    num -= x * Math.pow(1024, i) 
+  }
+  return arr;
 }
 
+let twos = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048]
+let dec = 3;
+
+function dec2bin(num) {
+  let arr = [];
+  for (i = 0; i < 12; i++) {
+    arr.push((num & twos[12 - 1 - i]) >> (12 - 1 - i))
+  }
+  return arr;
+}
+
+console.log(dec2bin(3014))

@@ -32,7 +32,6 @@ const cube = { // corners only
     }    
   },
   turn([p1, o1], dir) {
-    this.count++
     let p = this.maps.p[dir];
     let o = this.maps.o[dir]; 
     let p2 = p.map(x => p1[x]);                 // re-order block permutations

@@ -1,6 +1,9 @@
 const cube = require('./cornercube.js')
 const hash = require('./hash.js')
+const pdb = require('./pdb.js')
+const queue = require('./queue.js')
 const fs = require('fs')
+const turnLabels = ['U', 'u', 'D', 'd', 'L', 'l', 'R', 'r', 'F', 'f', 'B', 'b', 'X']
 const t = {
   U: ['U', 'D', 'd', 'L', 'l', 'R', 'r', 'F', 'f', 'B', 'b'],
   u: ['D', 'd', 'L', 'l', 'R', 'r', 'F', 'f', 'B', 'b'],
@@ -18,83 +21,68 @@ const t = {
 }
 
 //extend tree up to a given limit
-function execute(lim, batchSize) {
-  let pdb = new Array(88179840)
-  pdb[0] = 0;
+function execute(lim) {
+  let P = pdb.initialise();
+  let Q = queue.initialise()
   let turns = 0;
   let inserts = 0;
   let d = 0;
-  let filesWritten = 0;
-  let filesRead = 0;
-  let queueFilling = true;
-  let queue = [0, 'X']
-  let overflow = []
   let startTime = Date.now()
   while (d < lim) {
-    if (queue.length == 0) {
-      queue = fs.readFileSync(`./queue/queue${filesRead}.js`, 'utf-8').split(',').map(x => (x.length == 1) ? x : parseInt(x))
-      fs.unlinkSync(`./queue/queue${filesRead}.js`)
-      filesRead++
-    }
-    let z = queue[0]
+  //for (I = 0; I < 3; I++) {
+    let [z, lastIndex] = queue.read(Q)
+    //console.log(`Read ${z}, ${lastIndex} from queue`)
+    let last = turnLabels[lastIndex]
     let origState = hash.getState(z);
-    d = pdb[z]
-    let last = queue[1]
+    d = pdb.read(P, z)
+    //console.log(`d of ${z} = ${d}`)
     if (d < lim) {
       t[last].forEach(trn => {
+      //['U'].forEach(trn => {
         let newState = cube.turn(origState, trn)
         let Z = hash.getZ(newState)
-        if (pdb[Z] === undefined) {
-          pdb[Z] = d + 1;
-          if (queue.length < (batchSize * 2) && queueFilling == true) {
-            queue.push(Z, trn)
-          }
-          if (overflow.length > (batchSize * 2)) {
-            let buf = Buffer.from(overflow.splice(0, batchSize * 2).toString(), 'utf-8')
-            fs.writeFileSync(`./queue/queue${filesWritten}.js`, buf)
-            buf = null;
-            filesWritten++
-            queueFilling = false;
-          }
-          overflow.push(Z, trn);
+        if (pdb.read(P, Z) === 0 && Z !== 0) {
+          pdb.write(P, Z, d + 1)
+          queue.push(Q, Z, t.X.indexOf(trn))
           inserts++ 
-          }
-          turns++
-        });
-      queue.shift()
-      queue.shift()
+        }
+        turns++
+      });
     }
   }
   let endTime = Date.now()
   let timeTaken = endTime - startTime;
   console.log(`Executed to depth ${lim} in ${timeTaken} ms (${Math.floor(turns/timeTaken)} turns/ms). ${turns} turns, ${inserts} inserts (${Math.floor(100*(turns - inserts)/turns)}% redundancy)`)
-  console.log(`Files written: ${filesWritten}, queue: ${queue.length}, overflow: ${overflow.length}`)
-  check(pdb, lim)
-  for (i = filesRead; i < filesWritten; i++) {
-    fs.unlinkSync(`./queue/queue${i}.js`)
+  for (n = 0; n < lim; n++) {
+    for (nn = 0; nn < 4; nn++) {
+      check(P, n)
+    }
   }
+  logMemoryUsage()
 }
 
-function check(arr, n) {
+function check(P, n) {
   let state = [[0, 1, 2, 3, 4, 5, 6, 7], [0, 0, 0, 0, 0, 0, 0, 0]]
   let str = ''
-  let last = 'X'
   for (j = 0; j < n; j++) {
-    let ran = Math.floor(Math.random() * t[last].length)
-    state = cube.turn(state, t[last][ran])
-    str = str.concat(t[last][ran])
-    last = t[last][ran]
+    let ran = Math.floor(Math.random() * 12)
+    state = cube.turn(state, t.X[ran])
+    str = str.concat(t.X[ran])
   }
-  x = hash.encode(state[0])
-  y =  hash.dec2tern(state[1])
-  let z = 40320*x + y
-  let num = arr[z];
+  let z = hash.getZ(state)
+  let num = pdb.read(P, z)
   let colourCode = (num == n) ? 32 : 93;
   console.log('\u001b[' + colourCode + 'm' + `${str} => ${num}` + '\u001b[0m')
 }
 
-execute(7, 10000)
-const used = process.memoryUsage();
-for (let key in used) {
-  console.log(`${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB`);
+function logMemoryUsage() {
+  const used = process.memoryUsage();
+  for (let key in used) {
+    console.log(`${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB`);
+  }
 }
+
+for (i = 0; i < 100; i++) {
+  check(14)
+}
+
