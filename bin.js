@@ -74,4 +74,4 @@ let seq = ['r', 'F', 'u', 'b', 'l']
 seq.forEach(trn => {
   cube.state = cube.turn(cube.state, trn)
 })
-console.log(cube.state.map(arr => arr.slice(0, 6)))
+console.log([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].slice(6))
