@@ -55,5 +55,5 @@ function solve() {
   }
 }
 
-scramble(4)
+scramble(2)
 solve()
