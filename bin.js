@@ -1,7 +1,7 @@
-const cube = require('./edgecube.js')
-const hash = require('./hash2.js')
-const pdb = require('./pdb2.js')
-const queue = require('./queue2.js')
+const cube = require('./cube.js')
+const hash = require('./hash.js')
+// //const pdb = require('./pdb2.js')
+// const queue = require('./queue.js')
 const t = ['U', 'u', 'D', 'd', 'L', 'l', 'R', 'r', 'F', 'f', 'B', 'b'];
 const fs = require('fs')
 
@@ -68,10 +68,3 @@ function dec2bin(num) {
   }
   return arr;
 }
-
-
-let seq = ['r', 'F', 'u', 'b', 'l']
-seq.forEach(trn => {
-  cube.state = cube.turn(cube.state, trn)
-})
-console.log([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].slice(6))

@@ -1,6 +1,30 @@
 const cube = {
   state: [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], // permutation - 
           [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], // 0 = white on U/D, or F/B for middle layer
+  get top() {
+    let p = [0, 0, 0, 0, 0, 0];
+    let o = [0, 0, 0, 0, 0, 0];
+    for (let i = 0; i < 12; i++) {
+      let x = this.state[0][i]
+      if (x < 6) {
+        p[x] = i;
+        o[x] = this.state[1][i]
+      }
+    }
+    return [p, o]
+  },
+  get bottom() {
+    let p = [0, 0, 0, 0, 0, 0];
+    let o = [0, 0, 0, 0, 0, 0];
+    for (let i = 0; i < 12; i++) {
+      let x = this.state[0][i]
+      if (x > 5) {
+        p[x - 6] = i;
+        o[x - 6] = this.state[1][i]
+      }
+    }
+    return [p, o]
+  },   
   maps: {
     p: {
       U: [3, 0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11],
@@ -13,7 +37,7 @@ const cube = {
       l: [0, 4, 2, 3, 9, 1, 6, 7, 8, 5, 10, 11],
       F: [4, 1, 2, 3, 8, 5, 6, 0, 7, 9, 10, 11],
       f: [7, 1, 2, 3, 0, 5, 6, 8, 4, 9, 10, 11],
-      B: [0, 1, 6, 3, 4, 10, 2, 7, 8, 9, 5, 11],
+      B: [0, 1, 6, 3, 4, 2, 10, 7, 8, 9, 5, 11],
       b: [0, 1, 5, 3, 4, 10, 2, 7, 8, 9, 6, 11]
     },
     o: {
@@ -31,13 +55,15 @@ const cube = {
       b: [0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0]
     }
   },
-  turn([p1, o1], dir) {
+  turn(dir) {
+    let p1 = this.state[0];
+    let o1 = this.state[1];
     let p = this.maps.p[dir];
     let o = this.maps.o[dir];
     let p2 = p.map(x => p1[x]);
-    let o2 = o1.map((x, j) => (x + o[j] % 2));
+    let o2 = o1.map((x, j) => ((x + o[j]) % 2));
     let o3 = p.map(x => o2[x]);
-    return [p2, o3]
+    this.state = [p2, o3]
   }
 }
 

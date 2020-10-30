@@ -31,13 +31,15 @@ const cube = { // corners only
       b: [0, 2, 1, 0, 0, 1, 2, 0]
     }    
   },
-  turn([p1, o1], dir) {
+  turn(dir) {
+    let p1 = this.state[0];
+    let o1 = this.state[1];
     let p = this.maps.p[dir];
     let o = this.maps.o[dir]; 
     let p2 = p.map(x => p1[x]);                 // re-order block permutations
     let o2 = o1.map((x, j) => (x + o[j]) % 3);  // adjust block orientations
-    let o3 = p.map(x => o2[x]);                 // re-order block orientations
-    return [p2, o3]
+    let o3 = p.map(x => o2[x]);
+    this.state = [p2, o3];              // re-order block orientations
   }
 }
 

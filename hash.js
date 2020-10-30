@@ -1,30 +1,16 @@
 const hash = {
-  // dec2bin(dec){
-  //   return (dec >>> 0).toString(2);
-  // },  
-  // bin2dec(bin){
-  //   return parseInt(bin, 2).toString(10);
-  // },
-  factorials: [1, 1, 2, 6, 24, 120, 720, 5040, 40320],
+  factorials: [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800],
+  twos: [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048],
   threes: [1, 3, 9, 27, 81, 243, 729, 2187],
-  //countOnes: [0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7], 
-  // 362880, 36288000, 39916800, 479001600, 6227020800, 87178291200, 1307674368000, 20922789888000, 355687428096000, 6402373705728000, 121645100408832000, 2432902008176640000, 51090942171709440000, 1124000727777607680000, 25852016738884976640000]
-  
-  // function countOnes(num){
-  //   let arr = num.toString().split('').map(char => parseInt(char))
-  //   let count = 0;
-  //   for (j = 0; j < arr.length; j++) {
-  //     if (arr[j] == 1) count++
-  //   }
-  //   return count;
-  // }
   P(n, k) {
     return this.factorials[n] / this.factorials[n - k]
   },
   getZ([p, o]) { 
+    let n = p.length;
     let x = this.encode(p.slice());
-    let y = this.dec2tern(o.slice())
-    return 2187 * x + y
+    let y = (n == 6) ? this.bin2dec(o.slice()) : this.tern2dec(o.slice())
+    let a = (n == 6) ? 64 : 2187;
+    return a * x + y
   },
   getState(z) {
     let x = Math.floor(z / 2187);
@@ -33,14 +19,16 @@ const hash = {
   },  
   encode(arr) {
     let n = arr.length;
-    for (i = 0; i < n; i++) {
-      for (j = i + 1; j < n; j++) {
+    for (let i = 0; i < n; i++) {
+      for (let j = i + 1; j < n; j++) {
         if (arr[j] > arr[i]) arr[j] = arr[j] - 1
       }
     }
     val = 0;
-    for (i = 0; i < n; i++) {
-      val += arr[i] * this.factorials[n - 1 - i]
+    let k;
+    [n, k] = (n == 8) ? [8, 8] : [12, 6];
+    for (let i = 0; i < k; i++) {     
+      val += arr[i] * this.P(n - 1 - i, k - 1 - i);
     }
     return val;
   },
@@ -60,10 +48,10 @@ const hash = {
     }
     return arr;
   },
-  dec2tern(arr) {
+  tern2dec(arr) {
     return 729 * arr[0] + 243 * arr[1] + 81 * arr[2] + 27 * arr[3] + 9 * arr[4] + 3 * arr[5] + 1 * arr[6];
   },
-  tern2dec(num) {
+  dec2tern(num) {
     let output = [];
     for (i = 0; i < 7; i++) {
       let n = Math.floor(num / this.threes[6 - i]);
@@ -73,7 +61,15 @@ const hash = {
     let tot = output.reduce((tot, val) => tot + val);
     output.push((12 - tot) % 3)
     return output;
-  }
+  },
+  bin2dec(arr) {
+    let n = arr.length;
+    let val = 0;
+    arr.forEach((e, i) => {
+      val += e * this.twos[n - 1 - i]
+    })
+    return val
+  },
 }
 
 module.exports = hash;

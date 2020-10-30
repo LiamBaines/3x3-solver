@@ -1,0 +1,62 @@
+          layout: {
+            front: ['grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey'],
+            back: ['grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey'],
+            top: ['grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey'],
+            bottom: ['grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey'],
+            left: ['grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey'],
+            right: ['grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey']
+          },
+
+          layout: {
+            front: [red, red, red, red, red, red, red, red, red],
+            back: [orange, orange, orange, orange, orange, orange, orange, orange, orange],
+            top: [white, white, white, white, white, white, white, white, white],
+            bottom: [yellow, yellow, yellow, yellow, yellow, yellow, yellow, yellow, yellow],
+            left: [green, green, green, green, green, green, green, green, green],
+            right: [blue, blue, blue, blue, blue, blue, blue, blue, blue]
+          },
+
+                    <button onClick={() => p.f.turn(p.s.layout, 'R')}>R</button>
+          <button onClick={() => p.f.turn(p.s.layout, 'r')}>r</button>
+          <button onClick={() => p.f.turn(p.s.layout, 'L')}>L</button>
+          <button onClick={() => p.f.turn(p.s.layout, 'l')}>l</button>
+          <button onClick={() => p.f.turn(p.s.layout, 'U')}>U</button>
+          <button onClick={() => p.f.turn(p.s.layout, 'u')}>u</button>
+          <button onClick={() => p.f.turn(p.s.layout, 'D')}>D</button>
+          <button onClick={() => p.f.turn(p.s.layout, 'd')}>d</button>
+          <button onClick={() => p.f.turn(p.s.layout, 'F')}>F</button>
+          <button onClick={() => p.f.turn(p.s.layout, 'f')}>f</button>
+          <button onClick={() => p.f.turn(p.s.layout, 'B')}>B</button>
+          <button onClick={() => p.f.turn(p.s.layout, 'b')}>b</button>
+
+
+
+          let writer = fs.createWriteStream('data.csv', {
+  flags: 'w'
+});
+
+writer.on('ready', function() {
+  console.log('File ready to write.')
+})
+
+writer.on('pipe', function() {
+  console.log('Pipe incoming.')
+})
+
+reader.pipe(writer)
+
+async function add(solutions) {
+  return new Promise(resolve => {
+    fs.appendFile('data.csv', solutions, function (err) {
+        console.log('Appended.')
+        resolve('Appended.');
+      });
+  });
+}
+
+
+
+TO DO:
+
+- cut down branching factor to 9.5
+- check out lehmer decoding so that the queue doesn't take up so much memory
