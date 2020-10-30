@@ -1,4 +1,4 @@
-const cube = require('./edgecube.js') // ok
+const cube = require('../edgecube.js') // ok
 const hash = require('./hash3.js') // ok
 const pdb = require('./pdb3.js') // ok
 const queue = require ('./queue2.js') // ok
