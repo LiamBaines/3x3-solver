@@ -30,6 +30,8 @@ function scramble(n) {
 function solve() {
   let startTime = Date.now()
   let heap = new binaryHeap();
+  let open = {};
+  let closed = {};
   let turns = 0;
   let route = '';
   let found = false;
@@ -42,27 +44,46 @@ function solve() {
     }
   };
   heap.add(new Node('', [cube.corners, cube.edges], cube.h));
+  open[cube.id] = 0 + cube.h;
   while (!found) {
+    // get minimum node
     let currentNode = heap.min;
+    [cube.corners, cube.edges] = currentNode.state;
+    let origId = cube.id;
+    delete open[origId];
+    //console.log(`currentNode = ${currentNode.route} (${currentNode.f})`)
     let last = (currentNode.route == '') ? 'X' : currentNode.route[currentNode.route.length - 1];
-    t[last].forEach(trn => {
+    for (let trn of t[last]) {
       turns++
       [cube.corners, cube.edges] = currentNode.state;
       route = currentNode.route;
       cube.turn(trn);
-      let f = route.concat(trn).length + cube.h;
+      let successor = new Node(route.concat(trn), cube.state, cube.h)
       if (cube.h == 0) {
         console.log(`\u001b[32mRoute found! ${route.concat(trn)}\u001b[0m`);
         found = true;
       }
-      // add new node to queue
-      else if (cube.h <= currentNode.h) {
-      //else {
-        heap.add(new Node(route.concat(trn), cube.state, cube.h))
+      // if this id is in open with a lower f, skip
+      if (open[cube.id] && open[cube.id] < successor.f) {
+        continue;
       }
-    })
+      // if this id is in closed with a lower f, skip
+      else if (closed[cube.id] && closed[cube.id] < successor.f) {
+        continue;
+      }
+      // else, add the node to the open list
+      else {
+        heap.add(successor)
+        open[origId] == successor.f
+      }
+      closed[origId] = currentNode.f
+    }
   }
 }
 
-scramble(10)
-solve();
+for (let i = 0; i < 100; i++) {
+  scramble(15)
+  solve();
+}
+
+

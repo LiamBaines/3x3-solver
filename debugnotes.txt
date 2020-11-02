@@ -1,3 +1,4 @@
 TO DO:
   - Create open and closed sets
       - I think I can actually do this using dictionaries
+  - Have each node link to a parent (or merely have last, which can be reconstructed) rather than remember the entire route
