@@ -127,6 +127,20 @@ const cube = {
   get z() {
     return [hash.getZ(this.corners), hash.getZ(this.top), hash.getZ(this.bottom)]
   },
+  get id() {
+    let str = ''
+    for (let i = 0; i < 8; i++) {
+      let num = 3 * this.corners[0][i] + this.corners[1][i]
+      let char = num.toString(36)
+      str = str.concat(char)
+    }
+    for (let i = 0; i < 12; i++) {
+      let num = 2 * this.edges[0][i] + this.edges[1][i];
+      let char = num.toString(36)
+      str = str.concat(char)
+    }
+    return str;
+  },
   get h() {
     let z = this.z;
     let arr = [pdb, pdb2,pdb3]

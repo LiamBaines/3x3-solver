@@ -78,13 +78,8 @@ function factorial(x) {
   }
 }
 
-for (let i = 0; i < 100; i++) {
-  let ran = Math.floor(12 * Math.random())
-  cube.turn(t[ran])
-}
-
-console.log(`init: ${cube.h}`)
-for (let trn of t) {
-  cube.turn(trn)
-  console.log(cube.h)
+for (let element of t) {
+  console.log(element)
+  if (element == 'D') continue;
+  console.log(`Not D!`)
 }
