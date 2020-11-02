@@ -1,24 +1,36 @@
-const hash = require('./hash.js')
-const fs = require('fs')
-const pdb = fs.openSync('pdb.txt', 'r')
-const pdb2 = fs.openSync('pdb2.txt', 'r')
-const pdb3 = fs.openSync('pdb3.txt', 'r')
 const cube = require('./cube.js')
-const t = ['U', 'u', 'D', 'd', 'L', 'l', 'R', 'r', 'F', 'f', 'B', 'b'];
+let binaryHeap = require('./heap.js')
+const t = {
+  U: ['U', 'D', 'd', 'L', 'l', 'R', 'r', 'F', 'f', 'B', 'b'],
+  u: ['D', 'd', 'L', 'l', 'R', 'r', 'F', 'f', 'B', 'b'],
+  D: ['D', 'L', 'l', 'R', 'r', 'F', 'f', 'B', 'b'],
+  d: ['L', 'l', 'R', 'r', 'F', 'f', 'B', 'b'],
+  L: ['U', 'u', 'D', 'd', 'L', 'R', 'r', 'F', 'f', 'B', 'b'],
+  l: ['U', 'u', 'D', 'd', 'R', 'r', 'F', 'f', 'B', 'b'],
+  R: ['U', 'u', 'D', 'd', 'R', 'F', 'f', 'B', 'b'],
+  r: ['U', 'u', 'D', 'd', 'F', 'f', 'B', 'b'],
+  F: ['U', 'u', 'D', 'd', 'L', 'l', 'R', 'r', 'F', 'B', 'b'],
+  f: ['U', 'u', 'D', 'd', 'L', 'l', 'R', 'r', 'B', 'b'],
+  B: ['U', 'u', 'D', 'd', 'L', 'l', 'R', 'r', 'B'],
+  b: ['U', 'u', 'D', 'd', 'L', 'l', 'R', 'r'],
+  X: ['U', 'u', 'D', 'd', 'L', 'l', 'R', 'r', 'F', 'f', 'B', 'b'],
+}
 
 function scramble(n) {
+  cube.reset()
   let str = ''
   for (let i = 0; i < n; i++) {
-    let trn = t[Math.floor(12 * Math.random())]
+    let trn = t.X[Math.floor(12 * Math.random())]
     str = str.concat(trn)
     cube.turn(trn)
   }
-  console.log(`Scramble: ${str}`)
+  console.log(`Scramble: ${str} (n = ${n}, h = ${cube.h})`)
 }
 
 function solve() {
-  let queue = [];
-  let closed = [];
+  let startTime = Date.now()
+  let heap = new binaryHeap();
+  let turns = 0;
   let route = '';
   let found = false;
   class Node {
@@ -29,31 +41,28 @@ function solve() {
       this.f = route.length + h;
     }
   };
-  queue.push(new Node('', [cube.corners, cube.edges], cube.h));
+  heap.add(new Node('', [cube.corners, cube.edges], cube.h));
   while (!found) {
-    let currentNode = queue[0];
-    queue.forEach(node => {
-      if (node.f < currentNode.f) {
-        currentNode = node;
-      }
-    });
-    t.forEach(trn => {
+    let currentNode = heap.min;
+    let last = (currentNode.route == '') ? 'X' : currentNode.route[currentNode.route.length - 1];
+    t[last].forEach(trn => {
+      turns++
       [cube.corners, cube.edges] = currentNode.state;
       route = currentNode.route;
       cube.turn(trn);
+      let f = route.concat(trn).length + cube.h;
       if (cube.h == 0) {
-        console.log(`Route found! ${route.concat(trn)}`)
-        console.log(`Nodes generated: ${queue.length + closed.length}`)
+        console.log(`\u001b[32mRoute found! ${route.concat(trn)}\u001b[0m`);
         found = true;
       }
-      if (!queue.some(node => node.state.join(',') == currentNode.state.join(''))) {
-        queue.push(new Node(route.concat(trn), cube.state, cube.h))
+      // add new node to queue
+      //else if (f <= currentNode.f) {
+      else {
+        heap.add(new Node(route.concat(trn), cube.state, cube.h))
       }
     })
-    closed.push(currentNode)
-    queue.shift();
   }
 }
 
-scramble(2)
-solve()
+scramble(15)
+solve();

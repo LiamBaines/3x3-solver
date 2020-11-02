@@ -1,7 +1,2 @@
-The problem is that some turns don't change the value of z (specifically d and D turns),
-but still need to be added to the queue as they will affect later z values
-
-What condition should I check to see whether to add a value to the queue? 
-  I should add it to the queue if it's the first time seeing that value of z (but that table would be far too big to deal with)
-
-Another option would be to treat my edge databases entirely differently - try accounting for 6 specific blocks, not 6 positions
+Adding 11 to 9,11,10,10,10,10,10,10,10,10,10
+Result: 9,11,10,10,10,10,10,10,10,10,10,11

@@ -4,6 +4,7 @@ const hash = require('./hash.js')
 // const queue = require('./queue.js')
 const t = ['U', 'u', 'D', 'd', 'L', 'l', 'R', 'r', 'F', 'f', 'B', 'b'];
 const fs = require('fs')
+const bitset = require('bitset')
 
 // cube.state = cube.turn(cube.state, 'R');
 // cube.state = cube.turn(cube.state, 'u');
@@ -68,3 +69,13 @@ function dec2bin(num) {
   }
   return arr;
 }
+
+function factorial(x) {
+  if (x == 0) {
+    return 1
+  } else {
+    return x * factorial(x - 1)
+  }
+}
+
+console.log(cube.h)

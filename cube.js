@@ -118,6 +118,12 @@ const cube = {
     o3 = p.map(x => o2[x]);
     this.edges = [p2, o3]
   },
+  reset() {
+    this.corners = [[0, 1, 2, 3, 4, 5, 6, 7],
+                    [0, 0, 0, 0, 0, 0, 0, 0]];
+    this.edges = [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+  },
   get z() {
     return [hash.getZ(this.corners), hash.getZ(this.top), hash.getZ(this.bottom)]
   },

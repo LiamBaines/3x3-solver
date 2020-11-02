@@ -70,6 +70,13 @@ const hash = {
     })
     return val
   },
+  dec2bin(num) {
+    let arr = [];
+    for (i = 0; i < 6; i++) {
+      arr.push((num & this.twos[6 - 1 - i]) >> (6 - 1 - i))
+    }
+    return arr;
+  }
 }
 
 module.exports = hash;
