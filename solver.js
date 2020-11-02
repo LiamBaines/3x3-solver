@@ -56,13 +56,13 @@ function solve() {
         found = true;
       }
       // add new node to queue
-      //else if (f <= currentNode.f) {
-      else {
+      else if (cube.h <= currentNode.h) {
+      //else {
         heap.add(new Node(route.concat(trn), cube.state, cube.h))
       }
     })
   }
 }
 
-scramble(15)
+scramble(10)
 solve();
