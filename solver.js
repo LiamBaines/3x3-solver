@@ -68,22 +68,20 @@ function solve() {
         continue;
       }
       // if this id is in closed with a lower f, skip
-      else if (closed[cube.id] && closed[cube.id] < successor.f) {
+      if (closed[cube.id] && closed[cube.id] < successor.f) {
         continue;
       }
       // else, add the node to the open list
       else {
         heap.add(successor)
-        open[origId] == successor.f
+        open[cube.id] = successor.f
       }
-      closed[origId] = currentNode.f
     }
+    closed[origId] = currentNode.f
   }
 }
 
-for (let i = 0; i < 100; i++) {
-  scramble(15)
-  solve();
-}
+scramble(10)
+solve()
 
 
