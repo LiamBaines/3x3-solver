@@ -16,18 +16,26 @@ const t = {
   X: ['U', 'u', 'D', 'd', 'L', 'l', 'R', 'r', 'F', 'f', 'B', 'b'],
 }
 
-function scramble(n) {
+function scramble(input) {
   cube.reset()
   let str = ''
-  for (let i = 0; i < n; i++) {
-    let trn = t.X[Math.floor(12 * Math.random())]
-    str = str.concat(trn)
-    cube.turn(trn)
+  if (typeof input == 'number') {
+    for (let i = 0; i < input; i++) {
+      let trn = t.X[Math.floor(12 * Math.random())]
+      str = str.concat(trn);
+    }
   }
-  console.log(`Scramble: ${str} (n = ${n}, h = ${cube.h})`)
+  if (typeof input == 'string') {
+    str = input;
+  }
+  for (let char of str) {
+    cube.turn(char)
+  }
+  console.log(`Scramble: ${str} (n = ${str.length}, h = ${cube.h})`)
 }
 
 function solve() {
+  if (cube.h == 0) return true;
   let startTime = Date.now()
   let heap = new binaryHeap();
   let open = {};
@@ -51,7 +59,6 @@ function solve() {
     [cube.corners, cube.edges] = currentNode.state;
     let origId = cube.id;
     delete open[origId];
-    //console.log(`currentNode = ${currentNode.route} (${currentNode.f})`)
     let last = (currentNode.route == '') ? 'X' : currentNode.route[currentNode.route.length - 1];
     for (let trn of t[last]) {
       turns++
@@ -79,9 +86,15 @@ function solve() {
     }
     closed[origId] = currentNode.f
   }
+  if (!found) {
+    console.log(`\u001b[31mNo route found.\u001b[0m`);
+  }
+  return found;
 }
 
-scramble(10)
-solve()
+for (let i = 0; i <= 20; i++) {
+  scramble(i);
+  if (!solve()) break;
+}
 
 

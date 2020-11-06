@@ -1,4 +1,18 @@
-TO DO:
-  - Create open and closed sets
-      - I think I can actually do this using dictionaries
-  - Have each node link to a parent (or merely have last, which can be reconstructed) rather than remember the entire route
+POSSIBLE BUGS:
+
+- Min not being obtained correctly
+    => Don't think so, but it's quite slow to check
+- Top/bottom being obtained incorrectly and giving an inaccurate f
+    => Don't think so, seems to match up with appender3.js
+
+
+CRASH CASES:
+
+Scramble: fdlDBdlUFlBluLUb (n = 16, h = 10) => heap overflow
+Scramble: fBufBufuURFRUdfuR (n = 17, h = 9) => heap overflow
+Scramble: rDuRLUFRlfbddLBDBb (n = 18, h = 10) => heap overflow
+Scramble: DfruubDUFFLDblBlf (n = 17, h = 11) => heap overflow
+Scramble: fubrBflflRdLFFDffLu (n = 19, h = 9) => heap overflow
+Scramble: brlBbBufrDbDurbfl (n = 17, h = 9) => heap overflow
+
+IDA* SLOW CASES:

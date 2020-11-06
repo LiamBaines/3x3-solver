@@ -78,8 +78,6 @@ function factorial(x) {
   }
 }
 
-for (let element of t) {
-  console.log(element)
-  if (element == 'D') continue;
-  console.log(`Not D!`)
-}
+
+let arr = [1, 2, 3]
+if (arr.some(element => element == 2)) console.log(`arr has 2`)

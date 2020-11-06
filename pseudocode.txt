@@ -1,0 +1,34 @@
+function ida_star(root) {
+    bound = root.h;
+    path = [root];
+    while (true) {
+        t = search(path = path, g = 0, bound = bound);
+        if (t == "FOUND") return path;
+        if (t == Infinity) return "Not found";
+        bound = t;
+    }
+}
+
+function search(path, g, bound) {
+  node = path.last;
+  f = g + node.h;
+  if (f > bound) then return f;
+  if (node == goal) then return "FOUND";
+  let min = Infinity;
+  for (let successor of node.successors) {
+    if (!path.includes(successor)) {
+      path.push(successor);
+      t = search(path, g + 1, bound);
+      if (t == "FOUND") return "FOUND";
+      if (t < min) min = t;
+      path.pop();
+    }
+  }
+  return min;
+}
+
+-- what I need to create:
+      -- node class
+        -- .state
+        -- .successors() - ordered
+      -- path class
