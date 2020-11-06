@@ -75,6 +75,7 @@ function IDAstar(root) {
   let bound = root.h;
   let path = [root];
   while (true) {
+    console.log(`searching with bound ${bound}`)
     let T = search(path, 0, bound);
     if (T == 'FOUND') {
       let mins = Math.floor((Date.now() - start)/(1000*60))
@@ -98,7 +99,5 @@ function scramble(n) {
   return new Node(cube.state.slice(), 'X', cube.h);
 }
 
-for (let i = 0; i < 100; i++) {
-  let orig = scramble(i);
-  console.log(IDAstar(orig));
-}
+let orig = scramble(30);
+console.log(IDAstar(orig));
