@@ -425,11 +425,11 @@
         queue.push(new Node(cube.fullState(l), 0, 'N/A', '', 1000000, l));
         const turnsArray = ['U', 'u', 'D', 'd', 'R', 'r', 'L', 'l', 'F', 'f', 'B', 'b', 'u', 'U', 'd', 'D', 'r', 'R', 'l', 'L', 'f', 'F', 'b', 'B']
         let count = 0;
-            for (let i = 0; i < 26; i++) {
-              if (cube.fullState(l)[i] == solution[i]) {
-                count++
-              }
+          for (let i = 0; i < 26; i++) {
+            if (cube.fullState(l)[i] == solution[i]) {
+              count++
             }
+          }   
         let hc = count;
         console.log('Heuristic: ', hc)
         //function extend(node) {
